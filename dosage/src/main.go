@@ -1,7 +1,17 @@
 package main
 
+import (
+	"log"
+)
+
+func failOnError(err error, msg string) {
+	if err != nil {
+		log.Fatalf("%s: %s", msg, err)
+	}
+}
+
 func main() {
-	// Create subscriber for System queue
-	// On message - Publish message on ingress-dosage queue (type dosage)
+
+	PublishMsg("udkmac004", "myqueue", "My message")
 
 }
