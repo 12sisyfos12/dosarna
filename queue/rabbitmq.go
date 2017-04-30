@@ -12,6 +12,7 @@ func failOnError(err error, msg string) {
 	}
 }
 
+// PublishMsg - Publis a message on named queue
 func PublishMsg(hostname string, queue string, message string) {
 	conn, err := amqp.Dial("amqp://guest:guest@" + hostname + ":5672/")
 	failOnError(err, "Failed to connect to RabbitMQ")
