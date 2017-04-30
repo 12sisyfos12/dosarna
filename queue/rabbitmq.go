@@ -55,4 +55,5 @@ func PublishMsg(hostname string, queue string, message string) error {
 		log.Fatalf("%s: %s", msg, err)
 		return err
 	}
+	return nil
 }
