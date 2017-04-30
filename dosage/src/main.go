@@ -2,16 +2,19 @@ package main
 
 import (
 	"log"
+
+	queue "github.com/12sisyfos12/dosarna/queue"
 )
 
 func failOnError(err error, msg string) {
-	if err != nil {
-		log.Fatalf("%s: %s", msg, err)
-	}
 }
 
 func main() {
 
-	PublishMsg("udkmac004", "myqueue", "My message")
+	err := queue.PublishMsg("udkmac004", "myqueue", "My message")
+	if err != nil {
+		msg := "Failed to send messagel"
+		log.Fatalf("%s: %s", msg, err)
+	}
 
 }
