@@ -6,20 +6,23 @@ import (
 	"github.com/streadway/amqp"
 )
 
-func failOnError(err error, msg string) {
-	if err != nil {
-		log.Fatalf("%s: %s", msg, err)
-	}
-}
-
 // PublishMsg - Publis a message on named queue
-func PublishMsg(hostname string, queue string, message string) {
+func PublishMsg(hostname string, queue string, message string) error {
 	conn, err := amqp.Dial("amqp://guest:guest@" + hostname + ":5672/")
-	failOnError(err, "Failed to connect to RabbitMQ")
+	if err != nil {
+		msg := "Failed to connect to RabbitMQ"
+		log.Fatalf("%s: %s", msg, err)
+		return err
+	}
+
 	defer conn.Close()
 
 	ch, err := conn.Channel()
-	failOnError(err, "Failed to open a channel")
+	if err != nil {
+		msg := "Failed to open a channel"
+		log.Fatalf("%s: %s", msg, err)
+		return err
+	}
 	defer ch.Close()
 
 	q, err := ch.QueueDeclare(
@@ -30,7 +33,11 @@ func PublishMsg(hostname string, queue string, message string) {
 		false, // no-wait
 		nil,   // arguments
 	)
-	failOnError(err, "Failed to declare a queue")
+	if err != nil {
+		msg := "Failed to declare a queue"
+		log.Fatalf("%s: %s", msg, err)
+		return err
+	}
 
 	body := message
 	err = ch.Publish(
@@ -43,5 +50,9 @@ func PublishMsg(hostname string, queue string, message string) {
 			Body:        []byte(body),
 		})
 	log.Printf(" [x] Sent %s on queue %s", body, queue)
-	failOnError(err, "Failed to publish a message")
+	if err != nil {
+		msg := "Failed to publish a message"
+		log.Fatalf("%s: %s", msg, err)
+		return err
+	}
 }
